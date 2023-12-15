@@ -1,9 +1,9 @@
 class Player {
-    constructor(name, score) {
+    constructor(name, score, slotMachines, money) {
         this.name = name;
         this.score = score;
-        this.slotMachines = 1;
-        this.money = 1000;
+        this.slotMachines = slotMachines || 1;
+        this.money = money || 1000;
     }
 }
 
@@ -84,78 +84,64 @@ class GameState {
         const slotMachineWidth = 150;
         const slotMachineHeight = 300;
 
-        const leftSlotMachineCount = Math.floor((width / 2 - carpetWidth / 2) / slotMachineWidth);
-        const rightSlotMachineCount = Math.floor((width / 2 - carpetWidth / 2) / slotMachineWidth);
+        const leftSlotMachineCountPlaceholder = Math.floor((width / 2 - carpetWidth / 2) / slotMachineWidth);
+        const rightSlotMachineCountPlaceholder = Math.floor((width / 2 - carpetWidth / 2) / slotMachineWidth);
         const topSlotMachineCount = Math.floor(height / slotMachineHeight);
 
         // Draw the slot machines on the left side accounting for the carpet and the height of the window
-        for (let i = 0; i < leftSlotMachineCount; i++) {
+        for (let i = 0; i < leftSlotMachineCountPlaceholder; i++) {
             for (let j = 0; j < topSlotMachineCount; j++) {
                 this.drawSlotMachinePlaceholder(i * slotMachineWidth, j * slotMachineHeight);
             }
         }
 
         // Draw the slot machines on the right side accounting for the carpet and the height of the window
-        for (let i = 0; i < rightSlotMachineCount; i++) {
+        for (let i = 0; i < rightSlotMachineCountPlaceholder; i++) {
             for (let j = 0; j < topSlotMachineCount; j++) {
                 this.drawSlotMachinePlaceholder(width - (i + 1) * slotMachineWidth, j * slotMachineHeight);
             }
         }
 
-        // Draw the as many slot machines as the player owns ontop of the placeholders
-        const player = new Player("Player 1", 1000);
-        //
-        //
-        //
-        //
-        //
+        // Draw the as many slot machines as the player owns ontop of the placeholders accounting for the carpet and the height of the window
+        const player = new Player("Player 1", 1000, 4);
+
+        // Calculate how many slot machines can fit on the left and right side of the carpet by checking how many the player owns
+        const leftSlotMachineCount = Math.min(Math.floor((width / 2 - carpetWidth / 2) / slotMachineWidth), player.slotMachines);
+        const rightSlotMachineCount = Math.min(Math.floor((width / 2 - carpetWidth / 2) / slotMachineWidth), player.slotMachines);
 
 
-        //
-        //
-        //
-        //
-        //
-        //
+        // Get the number of slot machines that the user owns
+        const slotMachineCount = player.slotMachines;
+
+        // Draw the slot machines on the left side accounting for the carpet and the height of the window aswell as the number of slot machines the player owns
+        let totalSlotMachinesDrawn = 0;
+
+        for (let i = 0; i < leftSlotMachineCount; i++) {
+            for (let j = 0; j < topSlotMachineCount; j++) {
+                if (totalSlotMachinesDrawn >= slotMachineCount) {
+                    break;
+                }
+                this.drawSlotMachine(i * slotMachineWidth, j * slotMachineHeight);
+                totalSlotMachinesDrawn++;
+            }
+            if (totalSlotMachinesDrawn >= slotMachineCount) {
+                break;
+            }
+        }
+
+        // Check if there are enough spaces for the player's slot machines to be drawn
+        if (totalSlotMachinesDrawn < slotMachineCount) {
+            console.log("Error: Not enough spaces to draw all the player's slot machines");
+
+            // Draw a big red X on the screen
+            fill(255, 255, 0); // Red color
+            textSize(100);
+            textAlign(CENTER);
+            text("X", width / 2, height / 2);
 
 
+        }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
     }
 
     // Function to draw a slot machine
