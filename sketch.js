@@ -6,6 +6,18 @@ class Player {
     }
 }
 
+let textX = 0; // Start from the right edge of the window
+
+let slotScroll;
+let floor;
+let marble;
+
+function preload() {
+    slotScroll = loadImage('./slot.gif'); // Load the GIF
+    floor = loadImage('./floor.webp');
+    marble = loadImage('./marble.jfif');
+}
+
 const player = new Player("Player 1");
 let slotMachines = [];
 
@@ -47,6 +59,7 @@ class GameState {
             // Add code to show the leaderboard
             this.showLeaderboard();
         }
+
     }
 
     drawMenu() {
@@ -66,6 +79,13 @@ class GameState {
         // Draw the casino
         this.drawCasino();
 
+        fill(0); // Set the text color
+        textSize(40); // Set the text size
+        text('"90% OF GAMBLERS QUIT BEFORE THEY MAKE IT BIG."                         "GAMBLING IS NOT ABOUT MONEY; IT IS ABOUT THE THRILL OF THE RISK."                          "YOU MISS 100% OF THE SHOTS YOU DON\'T TAKE." — WAYNE GRETZKY                                          “SUCCESS IS NOT FINAL, FAILURE IS NOT FATAL: IT IS THE COURAGE TO CONTINUE THAT COUNTS.” — WINSTON CHURCHILL                                               “THE ONLY REAL MISTAKE IS NOT GOING TO THE CASINO ATLEAST ONCE A WEEK.” — HENRY FORD                          Capital Casino features several gaming tables for casino players. Contact us at (916) 446-0700 or info@capitol-casino.com to learn more and try your luck!                                                      THE SAFEST WAY TO DOUBLE YOUR MONEY IS THROUGH THE CASINO. — Kin Hubbard', textX, 50); // Draw the text
+    
+        textX -= 4; // Move the text to the left
+
+
     }
 
     drawCasino() {
@@ -73,15 +93,17 @@ class GameState {
         // Set the background color
         background(220);
 
-        frameRate(10);
+        frameRate(30);
 
         // Increase the player's money
         this.increaseMoney();
 
-        // Draw the red carpet down the middle
-        fill(255, 0, 0); // Red color
+        // Draw the floor to cover the whole screen
+        image(floor, 0, 0, width, height);
+
+        // Draw the marble down the middle
         const carpetWidth = 0.9 * 160; // 90% of the door width
-        rect(width / 2 - carpetWidth / 2, 0, carpetWidth, height);
+        image(marble, width / 2 - carpetWidth / 2, 0, carpetWidth, height);
 
         // Draw the casino entrance door
         fill(0); // Black color
@@ -167,16 +189,19 @@ class GameState {
         const nextSlotMachineCost = 500 * player.slotMachines;
 
         // Setup the buy slot machine button
-        const buySlotMachineButton = createButton("Buy Slot Machine ($" + nextSlotMachineCost + ")");
-        buySlotMachineButton.position(10, height - 100);
-        buySlotMachineButton.size(200, 50);
-        buySlotMachineButton.style("background-color", "white");
+        // Draw the rectangle
+        fill(255); // White color
+        rect(10, height - 100, 250, 50);
+        // Draw the text
+        fill(0); // Black color
+        textSize(20);
+        textAlign(LEFT);
+        text(`Buy Slot Machine - $${nextSlotMachineCost}`, 15, height - 70);    
 
-        // Add a click event listener to the button
-        buySlotMachineButton.mousePressed(() => {
-            console.log("Clicked on buy slot machine button");
+        // Check if the mouse is inside the rectangle and if it is pressed
+        if (mouseIsPressed && mouseX > 10 && mouseX < 300 && mouseY > height - 100 && mouseY < height - 50) {
             this.buySlotMachine(nextSlotMachineCost);
-        });
+        }
     }
 
     increaseMoney() {
@@ -188,8 +213,6 @@ class GameState {
     buySlotMachine(price) {
         // Check if the player has enough money to buy a slot machine
         if (player.money < price) {
-            console.log("Not enough money to buy a slot machine");
-            alert("Not enough money to buy a slot machine");
             return;
         }
 
@@ -200,29 +223,29 @@ class GameState {
         player.money -= price;
     }
 
+
+
     // Function to draw a slot machine
     drawSlotMachine(x, y, margin = "left", number) {
         // Draw the slot machine body
+
         fill(200); // Gray color
         if (margin === "left") {
             rect(x + 30, y, 100, 150);
 
             slotMachines.push({ x: x + 30, y: y, width: 100, height: 150, number: number })
-            console.log(slotMachines)
+            //console.log(slotMachines)
 
-            
+
         } else {
             rect(x, y, 100, 150);
         }
 
+        // Draw the screen
         if (margin === "left") {
-            // Draw the screen
-            fill(0); // Black color
-            rect(x + 40, y + 10, 80, 70);
+            image(slotScroll, x-6, y+5, 180, 100);
         } else {
-            // Draw the screen
-            fill(0); // Black color
-            rect(x + 10, y + 10, 80, 70);
+            image(slotScroll, x-36, y+5, 180, 100);
         }
     }
 
@@ -315,12 +338,19 @@ class GameState {
         }
 
         // Add a back button that is 50px below the last button, calculate the position based on the last button
-        const backButton = createButton("Back");
+        const backButton = createButton("Start Game");
         backButton.position(width / 2 - 50, height / 2 + leaderboardData.length * 60);
         backButton.size(100, 50);
         backButton.mousePressed(() => {
             console.log("Clicked on the back button");
-            this.state = "menu";
+
+            // Delete every html button
+            document.querySelectorAll("button").forEach(button => {
+                button.remove();
+            });
+            
+
+            this.state = "entered_game";
         });
 
 
