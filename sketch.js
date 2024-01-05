@@ -39,12 +39,6 @@ class GameState {
         this.startButton.position(width / 2 - 50, height / 2);
         this.startButton.size(100, 50);
         this.startButton.mousePressed(this.startGame.bind(this));
-
-        // Create the leaderboard button
-        this.leaderboardButton = createButton('Leaderboard');
-        this.leaderboardButton.position(width / 2 - 50, height / 2 + 70);
-        this.leaderboardButton.size(100, 50);
-        this.leaderboardButton.mousePressed(this.showLeaderboard.bind(this));
     }
 
     draw() {
