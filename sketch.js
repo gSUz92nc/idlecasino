@@ -267,7 +267,6 @@ class GameState {
 
         // Recenter the menu
         this.startButton.position(width / 2 - 50, height / 2);
-        this.leaderboardButton.position(width / 2 - 50, height / 2 + 70);
     }
 
     startGame() {
