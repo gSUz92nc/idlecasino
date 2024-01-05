@@ -1,4 +1,17 @@
 class Player {
+
+    saveToLocalStorage() {
+        localStorage.setItem('player', JSON.stringify(this));
+    }
+
+    static loadFromLocalStorage() {
+        const data = localStorage.getItem('player');
+        if (data) {
+            return Object.assign(new Player(), JSON.parse(data));
+        }
+        return null;
+    }
+    
     constructor(name, slotMachines, money) {
         this.name = name;
         this.slotMachines = slotMachines || 1;
@@ -18,7 +31,9 @@ function preload() {
     marble = loadImage('./marble.jfif');
 }
 
-const player = new Player("Player 1");
+const loadedPlayer = Player.loadFromLocalStorage() || new Player("Player 1");
+const player = loadedPlayer;
+
 let slotMachines = [];
 
 class GameState {
@@ -49,7 +64,8 @@ class GameState {
             // Add code to draw the game
             this.drawGame();
         }
-
+        
+        player.saveToLocalStorage();
     }
 
     drawMenu() {
