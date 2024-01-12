@@ -188,7 +188,7 @@ class GameState {
         text(`Money: ${player.money}`, 10, height - 30);
 
         //Calculate the cost of the nest slot machine
-        const nextSlotMachineCost = 500 * player.slotMachines;
+        const nextSlotMachineCost = 100 * player.slotMachines;
 
         // Setup the buy slot machine button
         // Draw the rectangle
