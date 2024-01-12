@@ -1,0 +1,1 @@
+https://idlecasino.vercel.app
