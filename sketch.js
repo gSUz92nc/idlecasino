@@ -1,5 +1,4 @@
 class Player {
-
     saveToLocalStorage() {
         localStorage.setItem('player', JSON.stringify(this));
     }
@@ -11,14 +10,22 @@ class Player {
         }
         return null;
     }
-    
+
     constructor(name, slotMachines, money) {
         this.name = name;
         this.slotMachines = slotMachines || 1;
         this.money = money || 1000;
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const cheatParam = urlParams.get('cheat');
+        if (cheatParam) {
+            const cheatSlotMachines = parseInt(cheatParam);
+            if (!isNaN(cheatSlotMachines)) {
+                this.slotMachines = cheatSlotMachines;
+            }
+        }
     }
 }
-
 let textX = 0; // Start from the right edge of the window
 
 let slotScroll;
